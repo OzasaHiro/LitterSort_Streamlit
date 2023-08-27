@@ -5,7 +5,7 @@ import tensorflow as tf
 from PIL import Image
 
 # クラスのマッピング
-CLASSES = ['paper', 'metal', 'cardboard', 'trash', 'glass', 'plastic', 'compost']
+CLASSES = ['cardboard','compost', 'glass', 'metal', 'paper',  'plastic', 'trash']
 
 @st.cache(allow_output_mutation=True)
 def load_model():
@@ -42,14 +42,14 @@ def main():
         image = Image.open(uploaded_file)
         st.image(image, caption='Uploaded_photo', use_column_width=True)
         st.write("")
-        st.write("推論中...")
+        st.write("Inference...")
         
         # モデルを読み込む
         interpreter = load_model()
         
         # 画像認識を実行
         label, confidence = classify_image(image, interpreter)
-        st.write(f"結果: {label}  (確率: {confidence:.2f}%)")
+        st.write(f"Result: {label}  (Confidence: {100*confidence:.2f}%)")
 
 if __name__ == "__main__":
     main()
