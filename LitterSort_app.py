@@ -122,29 +122,29 @@ def main():
             st.write(f"Result: {label}  (Confidence: {100*confidence:.0f}%)")
             st.write(generate_comment(label))
             
+
             # クラス選択の状態をセッションステートに保存
             if 'class_selection' not in st.session_state:
                 st.session_state.class_selection = None
-        
+            
             # Uploadボタンの状態をセッションステートに保存
             if 'upload_clicked' not in st.session_state:
                 st.session_state.upload_clicked = False
-        
+            
             if st.button('Start Upload'):
                 st.session_state.upload_clicked = True
-        
+            
             # Uploadボタンがクリックされた場合のみ選択ボックスを表示
             if st.session_state.upload_clicked:
                 st.session_state.class_selection = st.selectbox(
-                    "What is this photo of?　Please let me know the answer!",
+                    "What is this photo of?",
                     list(CLASS_COMMENTS.keys()) + list(ADDITIONAL_CLASS_COMMENTS.keys()),
                     index=0 if st.session_state.class_selection is None else list(CLASS_COMMENTS.keys()).index(st.session_state.class_selection)
                 )
-        
-                if st.button("Confirm and Upload"):
+            
+                if st.button("Confirm and Upload to Google Drive"):
                     upload_to_google_drive(image, st.session_state.class_selection)
-                    st.write(f"Uploaded {st.session_state.class_selection} image!")
-
+                    st.write(f"Uploaded {st.session_state.class_selection} image to Google Drive!")
 
 
 
