@@ -15,7 +15,8 @@ ANSWERS = ['cardboard','compost', 'glass', 'metal', 'paper',  'plastic', 'trash'
 
 def upload_to_google_drive(image, selected_class, setting_path: str='settings.yaml'):
     """画像をGoogle Driveにアップロードします。"""
-    gauth = GoogleAuth(setting_path)
+    #gauth = GoogleAuth(setting_path)
+    gauth = GoogleAuth()
     gauth.LocalWebserverAuth()  # 認証を行う
     drive = GoogleDrive(gauth)
 
