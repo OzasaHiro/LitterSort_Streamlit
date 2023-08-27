@@ -59,7 +59,7 @@ def classify_image(img, interpreter):
 
 def main():
     st.title("LitterSortApp")
-    uploaded_file = st.file_uploader("Upload Photo", type=['jpg', 'png', 'jpeg'])
+    uploaded_file = st.file_uploader("Upload Photo", type=['jpg', 'png', 'jpeg', 'heic'])
 
     if uploaded_file is not None:
         image = open_image(uploaded_file)
@@ -73,7 +73,7 @@ def main():
             
             # 画像認識を実行
             label, confidence = classify_image(image, interpreter)
-            st.write(f"Result: {label}  (Confidence: {100*confidence}%)")
+            st.write(f"Result: {label}  (Confidence: {100*confidence:.0f}%)")
 
 
 if __name__ == "__main__":
