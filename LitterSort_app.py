@@ -16,7 +16,7 @@ def load_model():
 
 def classify_image(img, interpreter):
     # 画像のリサイズ
-    img = img.resize((400, 300))
+    img = img.resize((224, 224))
     # 画像の正規化
     img_arr = np.array(img).astype(np.float32) / 255.0
     # モデルの入出力の情報を取得
