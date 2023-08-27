@@ -4,3 +4,4 @@ numpy
 Pillow
 pyheif
 pydrive
+pydrive2
