@@ -123,13 +123,16 @@ def main():
             st.write(generate_comment(label))
             
             if st.button('Upload'):
-                        # 選択ボックスに「その他（Others）」と「わからない（Unknown）」を追加
-                        class_selection = st.selectbox(
-                            "What is this photo of?",
-                            list(CLASS_COMMENTS.keys()) + list(ADDITIONAL_CLASS_COMMENTS.keys())
-                        )
-                        upload_to_google_drive(image, class_selection)
-                        st.write(f"Uploaded {class_selection} image!")
+                # 選択ボックスに「その他（Others）」と「わからない（Unknown）」を追加
+                class_selection = st.selectbox(
+                    "What is this photo of?　Please let me know the answer!",
+                    list(CLASS_COMMENTS.keys()) + list(ADDITIONAL_CLASS_COMMENTS.keys())
+                )
+                
+                # 選択されたクラスに基づいてアップロードを実行するボタンを追加
+                if st.button("Confirm and Upload"):
+                    upload_to_google_drive(image, class_selection)
+                    st.write(f"Uploaded {class_selection} image!")
 
 
 if __name__ == "__main__":
