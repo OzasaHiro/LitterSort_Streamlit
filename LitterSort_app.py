@@ -133,11 +133,11 @@ def main():
                 st.session_state.class_selection = None
             
             # Uploadボタンの状態をセッションステートに保存
-            if 'upload_clicked' not in st.session_state:
-                st.session_state.upload_clicked = False
+            #if 'upload_clicked' not in st.session_state:
+             #   st.session_state.upload_clicked = False
             
-            if st.button('Start Upload'):
-                st.session_state.upload_clicked = True
+            #if st.button('Start Upload'):
+            #    st.session_state.upload_clicked = True
             
             st.session_state.class_selection = st.selectbox(
                 "What is this photo of? Please let me know the answer!!",
