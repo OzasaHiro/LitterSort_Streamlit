@@ -106,11 +106,10 @@ def main():
     st.title("LitterSortApp")
     uploaded_file = st.file_uploader("Upload Photo", type=['jpg', 'png', 'jpeg', 'heic'])
 
-    if uploaded_file:
-    
+    #if uploaded_file:
         # 新しい画像がアップロードされた場合、セッションステートをリセット
-        st.session_state.class_selection = None
-        st.session_state.upload_clicked = False
+    #    st.session_state.class_selection = None
+    #    st.session_state.upload_clicked = False
 
     if uploaded_file is not None:
         image = open_image(uploaded_file)
