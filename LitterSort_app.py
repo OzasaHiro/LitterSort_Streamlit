@@ -122,21 +122,28 @@ def main():
             st.write(f"Result: {label}  (Confidence: {100*confidence:.0f}%)")
             st.write(generate_comment(label))
             
-            class_selection = None
+            # クラス選択の状態をセッションステートに保存
+            if 'class_selection' not in st.session_state:
+                st.session_state.class_selection = None
+        
+            # Uploadボタンの状態をセッションステートに保存
+            if 'upload_clicked' not in st.session_state:
+                st.session_state.upload_clicked = False
+        
             if st.button('Start Upload'):
-                default_val = 'paper'  # 初回のデフォルト値
-                if class_selection:   # 選択が以前にされていれば、その値を使用
-                    default_val = class_selection
-            
-                class_selection = st.selectbox(
-                    "What is this photo of? Please let me know the answer!",
+                st.session_state.upload_clicked = True
+        
+            # Uploadボタンがクリックされた場合のみ選択ボックスを表示
+            if st.session_state.upload_clicked:
+                st.session_state.class_selection = st.selectbox(
+                    "What is this photo of?　Please let me know the answer!",
                     list(CLASS_COMMENTS.keys()) + list(ADDITIONAL_CLASS_COMMENTS.keys()),
-                    index=list(CLASS_COMMENTS.keys()).index(default_val)
+                    index=0 if st.session_state.class_selection is None else list(CLASS_COMMENTS.keys()).index(st.session_state.class_selection)
                 )
-                
+        
                 if st.button("Confirm and Upload"):
-                    upload_to_google_drive(image, class_selection)
-                    st.write(f"Uploaded {class_selection} image!")
+                    upload_to_google_drive(image, st.session_state.class_selection)
+                    st.write(f"Uploaded {st.session_state.class_selection} image!")
 
 
 
