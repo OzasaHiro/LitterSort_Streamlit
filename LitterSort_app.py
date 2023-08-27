@@ -30,6 +30,23 @@ def open_image(file):
 
     return image
 
+# クラス名に基づくコメントの辞書
+CLASS_COMMENTS = {
+    'paper': "This is likely paper. Please recycle it according to local rules.",
+    'metal': "This is probably metal. Please recycle it properly.",
+    'cardboard': "Looks like cardboard. Recycle it at appropriate facilities.",
+    'trash': "This seems to be general trash. Dispose of it correctly.",
+    'glass': "This appears to be glass. Handle with care and recycle.",
+    'plastic': "This is probably plastic. Recycle if possible.",
+    'compost': "This seems to be compostable material. Dispose in a green bin."
+}
+
+def generate_comment(class_name):
+    """指定されたクラス名に基づいてコメントを生成します。"""
+    return CLASS_COMMENTS.get(class_name, "Please dispose of or recycle according to local rules.")
+
+
+
 @st.cache(allow_output_mutation=True)
 def load_model():
     # モデルの読み込み
@@ -74,6 +91,7 @@ def main():
             # 画像認識を実行
             label, confidence = classify_image(image, interpreter)
             st.write(f"Result: {label}  (Confidence: {100*confidence:.0f}%)")
+            st.write(generate_comment(label))
 
 
 if __name__ == "__main__":
