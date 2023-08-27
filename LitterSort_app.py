@@ -3,9 +3,32 @@ import streamlit as st
 import numpy as np
 import tensorflow as tf
 from PIL import Image
+import pyheif
 
 # クラスのマッピング
 CLASSES = ['cardboard','compost', 'glass', 'metal', 'paper',  'plastic', 'trash']
+
+def open_image(file):
+    """ファイルの拡張子に応じて画像を開きます。"""
+    try:
+        # HEIC形式の場合
+        if file.name.lower().endswith(".heic"):
+            heif_file = pyheif.read(file.getvalue())
+            image = Image.frombytes(
+                heif_file.mode, 
+                heif_file.size, 
+                heif_file.data,
+                "raw",
+                heif_file.mode,
+                heif_file.stride,
+            )
+        else:
+            image = Image.open(file)
+    except Exception as e:
+        st.error(f"Loading Error: {e}")
+        return None
+
+    return image
 
 @st.cache(allow_output_mutation=True)
 def load_model():
@@ -39,17 +62,19 @@ def main():
     uploaded_file = st.file_uploader("Upload Photo", type=['jpg', 'png', 'jpeg'])
 
     if uploaded_file is not None:
-        image = Image.open(uploaded_file)
-        st.image(image, caption='Uploaded_photo', use_column_width=True)
-        st.write("")
-        st.write("Inference...")
+        image = open_image(uploaded_file)
+        if image:
+            st.image(image, caption='Uploaded_photo', use_column_width=True)
+            st.write("")
+            st.write("Inference...")
         
-        # モデルを読み込む
-        interpreter = load_model()
-        
-        # 画像認識を実行
-        label, confidence = classify_image(image, interpreter)
-        st.write(f"Result: {label}  (Confidence: {100*confidence:.2f}%)")
+            # モデルを読み込む
+            interpreter = load_model()
+            
+            # 画像認識を実行
+            label, confidence = classify_image(image, interpreter)
+            st.write(f"Result: {label}  (Confidence: {100*confidence}%)")
+
 
 if __name__ == "__main__":
     main()
