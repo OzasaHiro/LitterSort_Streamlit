@@ -4,9 +4,30 @@ import numpy as np
 import tensorflow as tf
 from PIL import Image
 import pyheif
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
+from datetime import datetime
 
 # クラスのマッピング
 CLASSES = ['cardboard','compost', 'glass', 'metal', 'paper',  'plastic', 'trash']
+
+ANSWERS = ['cardboard','compost', 'glass', 'metal', 'paper',  'plastic', 'trash', 'other', 'unknown'] 
+
+def upload_to_google_drive(image, selected_class):
+    """画像をGoogle Driveにアップロードします。"""
+    gauth = GoogleAuth()
+    gauth.LocalWebserverAuth()  # 認証を行う
+    drive = GoogleDrive(gauth)
+
+    filename = f"{selected_class}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg"
+    image.save(filename, format='JPEG')
+    
+    uploaded_file = drive.CreateFile({'title': filename, 'parents': [{'id': '1Sn0z8zKnqi127Qxa2LMnWKX_-o7eAKZw'}]})
+    uploaded_file.SetContentFile(filename)
+    uploaded_file.Upload()
+    
+    # オプション: ローカルのファイルを削除
+    # os.remove(filename)
 
 def open_image(file):
     """ファイルの拡張子に応じて画像を開きます。"""
@@ -39,6 +60,12 @@ CLASS_COMMENTS = {
     'glass': "This appears to be glass. Handle with care and recycle.",
     'plastic': "This is probably plastic. Recycle if possible.",
     'compost': "This seems to be compostable material. Dispose in a green bin."
+}
+
+# 追加のクラス名に基づくコメントの辞書
+ADDITIONAL_CLASS_COMMENTS = {
+    'others': "This category is for other items not listed.",
+    'unknown': "The content of the image is unclear or uncertain."
 }
 
 def generate_comment(class_name):
@@ -81,9 +108,10 @@ def main():
     if uploaded_file is not None:
         image = open_image(uploaded_file)
         if image:
+            image = image.resize((image.width // 2, image.height // 2))
             st.image(image, caption='Uploaded_photo', use_column_width=True)
             st.write("")
-            st.write("Inference...")
+            #st.write("Inference...")
         
             # モデルを読み込む
             interpreter = load_model()
@@ -92,6 +120,15 @@ def main():
             label, confidence = classify_image(image, interpreter)
             st.write(f"Result: {label}  (Confidence: {100*confidence:.0f}%)")
             st.write(generate_comment(label))
+            
+            if st.button('Upload'):
+                        # 選択ボックスに「その他（Others）」と「わからない（Unknown）」を追加
+                        class_selection = st.selectbox(
+                            "What is this photo of?",
+                            list(CLASS_COMMENTS.keys()) + list(ADDITIONAL_CLASS_COMMENTS.keys())
+                        )
+                        upload_to_google_drive(image, class_selection)
+                        st.write(f"Uploaded {class_selection} image!")
 
 
 if __name__ == "__main__":
