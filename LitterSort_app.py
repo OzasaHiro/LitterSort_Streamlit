@@ -122,17 +122,23 @@ def main():
             st.write(f"Result: {label}  (Confidence: {100*confidence:.0f}%)")
             st.write(generate_comment(label))
             
-            if st.button('Upload'):
-                # 選択ボックスに「その他（Others）」と「わからない（Unknown）」を追加
+            class_selection = None
+            if st.button('Start Upload'):
+                default_val = 'paper'  # 初回のデフォルト値
+                if class_selection:   # 選択が以前にされていれば、その値を使用
+                    default_val = class_selection
+            
                 class_selection = st.selectbox(
-                    "What is this photo of?　Please let me know the answer!",
-                    list(CLASS_COMMENTS.keys()) + list(ADDITIONAL_CLASS_COMMENTS.keys())
+                    "What is this photo of? Please let me know the answer!",
+                    list(CLASS_COMMENTS.keys()) + list(ADDITIONAL_CLASS_COMMENTS.keys()),
+                    index=list(CLASS_COMMENTS.keys()).index(default_val)
                 )
                 
-                # 選択されたクラスに基づいてアップロードを実行するボタンを追加
                 if st.button("Confirm and Upload"):
                     upload_to_google_drive(image, class_selection)
                     st.write(f"Uploaded {class_selection} image!")
+
+
 
 
 if __name__ == "__main__":
