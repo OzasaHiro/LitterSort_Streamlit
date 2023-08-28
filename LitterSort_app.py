@@ -13,14 +13,16 @@ CLASSES = ['cardboard','compost', 'glass', 'metal', 'paper',  'plastic', 'trash'
 
 ANSWERS = ['cardboard','compost', 'glass', 'metal', 'paper',  'plastic', 'trash', 'other', 'unknown'] 
 
-def upload_to_google_drive(image, selected_class):
+def upload_to_google_drive(image, class_name, selected_class):
     """画像をGoogle Driveにアップロードします。"""
     setting_path = 'settings.yaml'
     gauth = GoogleAuth(setting_path)
     gauth.LocalWebserverAuth()  # 認証を行う
     drive = GoogleDrive(gauth)
 
-    filename = f"{selected_class}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg"
+    i = 1 if class_name == selected_class else 0
+
+    filename = f"{selected_class}_{i}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg"
     image.save(filename, format='JPEG')
     
     uploaded_file = drive.CreateFile({'title': filename, 'parents': [{'id': '1Sn0z8zKnqi127Qxa2LMnWKX_-o7eAKZw'}]})
@@ -146,7 +148,7 @@ def main():
             )
         
             if st.button("Confirm and Upload"):
-                upload_to_google_drive(image, st.session_state.class_selection)
+                upload_to_google_drive(image, label, st.session_state.class_selection)
                 st.write(f"Uploaded {st.session_state.class_selection} image!")
 
 
