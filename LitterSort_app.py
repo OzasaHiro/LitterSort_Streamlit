@@ -157,9 +157,12 @@ def main():
             
             if st.button("Confirm and Upload"):
                 if index is not None:
-                    upload_to_google_drive(image, st.session_state.class_selection, list(CLASS_COMMENTS.keys())[index])
+                    predicted_label = list(CLASS_COMMENTS.keys())[index]
                 else:
-                    upload_to_google_drive(image, st.session_state.class_selection, st.session_state.class_selection)
+                    predicted_label = None
+                
+                upload_to_google_drive(image, st.session_state.class_selection, predicted_label)
+
                 st.write(f"Uploaded {st.session_state.class_selection} image!")
         
             #if st.button("Confirm and Upload"):
