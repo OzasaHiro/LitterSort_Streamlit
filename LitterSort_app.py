@@ -146,10 +146,25 @@ def main():
                 list(CLASS_COMMENTS.keys()) + list(ADDITIONAL_CLASS_COMMENTS.keys()),
                 index=0 if st.session_state.class_selection is None else list(CLASS_COMMENTS.keys()).index(st.session_state.class_selection)
             )
-        
+
+            
+            if st.session_state.class_selection in CLASS_COMMENTS.keys():
+                index = list(CLASS_COMMENTS.keys()).index(st.session_state.class_selection)
+            elif st.session_state.class_selection in ADDITIONAL_CLASS_COMMENTS.keys():
+                index = None
+            else:
+                index = 0
+            
             if st.button("Confirm and Upload"):
-                upload_to_google_drive(image, label, st.session_state.class_selection)
+                if index is not None:
+                    upload_to_google_drive(image, st.session_state.class_selection, list(CLASS_COMMENTS.keys())[index])
+                else:
+                    upload_to_google_drive(image, st.session_state.class_selection, st.session_state.class_selection)
                 st.write(f"Uploaded {st.session_state.class_selection} image!")
+        
+            #if st.button("Confirm and Upload"):
+                #upload_to_google_drive(image, label, st.session_state.class_selection)
+                #st.write(f"Uploaded {st.session_state.class_selection} image!")
 
 
 
