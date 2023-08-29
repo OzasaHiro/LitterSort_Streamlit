@@ -135,17 +135,17 @@ def main():
                 index=index
             )
             
-            if st.session_state.class_selection in CLASS_COMMENTS.keys():
+            if st.session_state.class_selection in CLASS_COMMENTS.keys() or st.session_state.class_selection in ADDITIONAL_CLASS_COMMENTS.keys():
                 predicted_label = st.session_state.class_selection
             else:
                 predicted_label = None
 
-            if st.button("Upload"):
+            if st.button("Upload to Google Drive"):
                 if predicted_label is None:
                     st.error("Please select a class before uploading.")
                 else:
                     upload_to_google_drive(image, label, predicted_label)
-                    st.success("Uploaded successfully!")
+                    st.success("Uploaded to Google Drive successfully!")
         
 
 
