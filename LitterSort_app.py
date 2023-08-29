@@ -140,12 +140,12 @@ def main():
             else:
                 predicted_label = None
 
-            if st.button("Upload to Google Drive"):
+            if st.button("Upload image"):
                 if predicted_label is None:
                     st.error("Please select a class before uploading.")
                 else:
                     upload_to_google_drive(image, label, predicted_label)
-                    st.success("Uploaded to Google Drive successfully!")
+                    st.success("Uploadedsuccessfully!")
         
 
 
