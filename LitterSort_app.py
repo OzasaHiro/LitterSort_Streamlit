@@ -145,7 +145,7 @@ def main():
                     st.error("Please select a class before uploading.")
                 else:
                     upload_to_google_drive(image, label, predicted_label)
-                    st.success("Uploadedsuccessfully!")
+                    st.success("Uploaded successfully!")
         
 
 
