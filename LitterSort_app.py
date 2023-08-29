@@ -108,66 +108,45 @@ def main():
     st.title("LitterSortApp")
     uploaded_file = st.file_uploader("Upload Photo", type=['jpg', 'png', 'jpeg', 'heic'])
 
-    #if uploaded_file:
-        # 新しい画像がアップロードされた場合、セッションステートをリセット
-    #    st.session_state.class_selection = None
-    #    st.session_state.upload_clicked = False
-
     if uploaded_file is not None:
         image = open_image(uploaded_file)
         if image:
             image = image.resize((image.width // 2, image.height // 2))
             st.image(image, caption='Uploaded_photo', use_column_width=True)
             st.write("")
-            #st.write("Inference...")
         
-            # モデルを読み込む
             interpreter = load_model()
             
-            # 画像認識を実行
             label, confidence = classify_image(image, interpreter)
             st.write(f"Result: {label}  (Confidence: {100*confidence:.0f}%)")
             st.write(generate_comment(label))
             
-
-            # クラス選択の状態をセッションステートに保存
             if 'class_selection' not in st.session_state:
                 st.session_state.class_selection = None
             
-            # Uploadボタンの状態をセッションステートに保存
-            #if 'upload_clicked' not in st.session_state:
-             #   st.session_state.upload_clicked = False
-            
-            #if st.button('Start Upload'):
-            #    st.session_state.upload_clicked = True
-            
+            if st.session_state.class_selection in CLASS_COMMENTS.keys():
+                index = list(CLASS_COMMENTS.keys()).index(st.session_state.class_selection)
+            else:
+                index = 0
+
             st.session_state.class_selection = st.selectbox(
                 "What is this photo of? Please let me know the answer!!",
                 list(CLASS_COMMENTS.keys()) + list(ADDITIONAL_CLASS_COMMENTS.keys()),
-                index=0 if st.session_state.class_selection is None else list(CLASS_COMMENTS.keys()).index(st.session_state.class_selection)
+                index=index
             )
-
             
             if st.session_state.class_selection in CLASS_COMMENTS.keys():
-                index = list(CLASS_COMMENTS.keys()).index(st.session_state.class_selection)
-            elif st.session_state.class_selection in ADDITIONAL_CLASS_COMMENTS.keys():
-                index = None
+                predicted_label = st.session_state.class_selection
             else:
-                index = 0
-            
-            if st.button("Confirm and Upload"):
-                if index is not None:
-                    predicted_label = list(CLASS_COMMENTS.keys())[index]
-                else:
-                    predicted_label = None
-                
-                upload_to_google_drive(image, st.session_state.class_selection, predicted_label)
+                predicted_label = None
 
-                st.write(f"Uploaded {st.session_state.class_selection} image!")
+            if st.button("Upload"):
+                if predicted_label is None:
+                    st.error("Please select a class before uploading.")
+                else:
+                    upload_to_google_drive(image, label, predicted_label)
+                    st.success("Uploaded successfully!")
         
-            #if st.button("Confirm and Upload"):
-                #upload_to_google_drive(image, label, st.session_state.class_selection)
-                #st.write(f"Uploaded {st.session_state.class_selection} image!")
 
 
 
