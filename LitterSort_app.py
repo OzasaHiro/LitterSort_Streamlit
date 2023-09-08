@@ -22,7 +22,7 @@ def upload_to_google_drive(image, class_name, selected_class):
 
     i = 1 if class_name == selected_class else 0
 
-    filename = f"{selected_class}_{i}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg"
+    filename = f"{selected_class}_{i}_{class_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg"
     image.save(filename, format='JPEG')
     
     uploaded_file = drive.CreateFile({'title': filename, 'parents': [{'id': '1Sn0z8zKnqi127Qxa2LMnWKX_-o7eAKZw'}]})
