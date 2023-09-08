@@ -5,3 +5,4 @@ Pillow
 pyheif
 pydrive
 pydrive2
+rembg
