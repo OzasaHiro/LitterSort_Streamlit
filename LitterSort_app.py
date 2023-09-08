@@ -7,7 +7,7 @@ import pyheif
 from pydrive2.auth import GoogleAuth
 from pydrive2.drive import GoogleDrive
 from datetime import datetime
-import remove
+from rembg import remove
 
 # クラスのマッピング
 CLASSES = ['cardboard','compost', 'glass', 'metal', 'paper',  'plastic', 'trash']
