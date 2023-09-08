@@ -113,6 +113,7 @@ def main():
         image = open_image(uploaded_file)
         if image:
             image = image.resize((image.width // 2, image.height // 2))
+            image_bg = image
             image = remove(image)
             img_rgb = image.convert('RGB')
 
@@ -154,7 +155,7 @@ def main():
                 if predicted_label is None:
                     st.error("Please select a class before uploading.")
                 else:
-                    upload_to_google_drive(image, label, predicted_label)
+                    upload_to_google_drive(image_bg, label, predicted_label)
                     st.success("Uploaded successfully!")
         
 
