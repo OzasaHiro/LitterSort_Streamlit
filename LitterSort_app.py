@@ -7,6 +7,7 @@ import pyheif
 from pydrive2.auth import GoogleAuth
 from pydrive2.drive import GoogleDrive
 from datetime import datetime
+import remove
 
 # クラスのマッピング
 CLASSES = ['cardboard','compost', 'glass', 'metal', 'paper',  'plastic', 'trash']
@@ -112,6 +113,15 @@ def main():
         image = open_image(uploaded_file)
         if image:
             image = image.resize((image.width // 2, image.height // 2))
+            image = remove(image)
+            img_rgb = image.convert('RGB')
+
+            if image.mode == 'RGBA':
+                r, g, b, a = image.split()
+                bg_white = Image.new('RGB', image.size, (255, 255, 255))
+                bg_white.paste(img_rgb, mask=a)
+                image = bg_white
+                
             st.image(image, caption='Uploaded_photo', use_column_width=True)
             st.write("")
         
