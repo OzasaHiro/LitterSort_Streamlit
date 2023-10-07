@@ -9,16 +9,16 @@ from pydrive2.drive import GoogleDrive
 from datetime import datetime
 from rembg import remove
 
-# クラスのマッピング
+#class mapping
 CLASSES = ['cardboard','compost', 'glass', 'metal', 'paper',  'plastic', 'trash']
 
 ANSWERS = ['cardboard','compost', 'glass', 'metal', 'paper',  'plastic', 'trash', 'other', 'unknown'] 
 
 def upload_to_google_drive(image, class_name, selected_class):
-    """画像をGoogle Driveにアップロードします。"""
+    """upload to GoogleDrive"""
     setting_path = 'settings.yaml'
     gauth = GoogleAuth(setting_path)
-    gauth.LocalWebserverAuth()  # 認証を行う
+    gauth.LocalWebserverAuth()  
     drive = GoogleDrive(gauth)
 
     i = 1 if class_name == selected_class else 0
@@ -30,13 +30,13 @@ def upload_to_google_drive(image, class_name, selected_class):
     uploaded_file.SetContentFile(filename)
     uploaded_file.Upload()
     
-    # オプション: ローカルのファイルを削除
+    #Option delete the local file
     # os.remove(filename)
 
 def open_image(file):
-    """ファイルの拡張子に応じて画像を開きます。"""
+    """open image file"""
     try:
-        # HEIC形式の場合
+        # for HEIC type
         if file.name.lower().endswith(".heic"):
             heif_file = pyheif.read(file.getvalue())
             image = Image.frombytes(
@@ -55,7 +55,7 @@ def open_image(file):
 
     return image
 
-# クラス名に基づくコメントの辞書
+# dictionaly of class and comments
 CLASS_COMMENTS = {
     'paper': "This is likely paper. Please recycle it according to local rules.",
     'metal': "This is probably metal. Please recycle it properly.",
@@ -66,40 +66,40 @@ CLASS_COMMENTS = {
     'compost': "This seems to be compostable material. Dispose in a green bin."
 }
 
-# 追加のクラス名に基づくコメントの辞書
+# additional class
 ADDITIONAL_CLASS_COMMENTS = {
     'others': "This category is for other items not listed.",
     'unknown': "The content of the image is unclear or uncertain."
 }
 
 def generate_comment(class_name):
-    """指定されたクラス名に基づいてコメントを生成します。"""
+    """create comments"""
     return CLASS_COMMENTS.get(class_name, "Please dispose of or recycle according to local rules.")
 
 
 
 @st.cache(allow_output_mutation=True)
 def load_model():
-    # モデルの読み込み
+    # load ML model
     interpreter = tf.lite.Interpreter(model_path="littersort_model.tflite")
     interpreter.allocate_tensors()
     return interpreter
 
 def classify_image(img, interpreter):
-    # 画像のリサイズ
+    # image resize
     img = img.resize((224, 224))
-    # 画像の正規化
+    # normalization
     img_arr = np.array(img).astype(np.float32) / 255.0
-    # モデルの入出力の情報を取得
+    # input output details
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
     
-    # 画像を入力データとして設定
+    
     interpreter.set_tensor(input_details[0]['index'], [img_arr])
-    # 推論を実行
+    
     interpreter.invoke()
     
-    # 推論結果を取得
+    
     output_data = interpreter.get_tensor(output_details[0]['index'])
     pred_label = np.argmax(output_data)
     
