@@ -109,7 +109,7 @@ def main():
                     {
                         "role": "user",
                         "content": [
-                            {"type": "text", "text": "lease classify the objects in the image into categories: compost, cardboard, glass, trash, plastic, metal, paper, or other. Based on the classification, advise on how to dispose of theis item as waste in San Jose."},
+                            {"type": "text", "text": "lease classify the objects in the image into categories: compost, cardboard, glass, trash, plastic, metal, paper, or other. Based on the classification, advise briefly on how to dispose of theis item as waste in San Jose."},
                             {
                                 "type": "image_url",
                                 "image_url": f"data:image/jpeg;base64,{base64_image}",
@@ -117,7 +117,7 @@ def main():
                         ],
                     }
                 ],
-                max_tokens=100,
+                max_tokens=200,
             )
 
             # 結果を表示
