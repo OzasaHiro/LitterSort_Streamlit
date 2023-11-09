@@ -23,24 +23,6 @@ CLASSES = ['cardboard','compost', 'glass', 'metal', 'paper',  'plastic', 'trash'
 
 ANSWERS = ['cardboard','compost', 'glass', 'metal', 'paper',  'plastic', 'trash', 'other', 'unknown'] 
 
-def upload_to_google_drive(image, class_name, selected_class):
-    """upload to GoogleDrive"""
-    setting_path = 'settings.yaml'
-    gauth = GoogleAuth(setting_path)
-    gauth.LocalWebserverAuth()  
-    drive = GoogleDrive(gauth)
-
-    i = 1 if class_name == selected_class else 0
-
-    filename = f"{selected_class}_{i}_{class_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg"
-    image.save(filename, format='JPEG')
-    
-    uploaded_file = drive.CreateFile({'title': filename, 'parents': [{'id': '1Sn0z8zKnqi127Qxa2LMnWKX_-o7eAKZw'}]})
-    uploaded_file.SetContentFile(filename)
-    uploaded_file.Upload()
-    
-    #Option delete the local file
-    # os.remove(filename)
 
 def open_image(file):
     """open image file"""
@@ -86,38 +68,6 @@ def generate_comment(class_name):
     return CLASS_COMMENTS.get(class_name, "Please dispose of or recycle according to local rules.")
 
 
-@st.cache(allow_output_mutation=True)
-def load_model():
-    # load ML model
-    interpreter = tf.lite.Interpreter(model_path="littersort_model.tflite")
-    interpreter.allocate_tensors()
-    return interpreter
-
-def classify_image(img, interpreter):
-    # image resize
-    img = img.resize((224, 224))
-    # normalization
-    img_arr = np.array(img).astype(np.float32) / 255.0
-    # input output details
-    input_details = interpreter.get_input_details()
-    output_details = interpreter.get_output_details()
-    
-    
-    interpreter.set_tensor(input_details[0]['index'], [img_arr])
-    
-    interpreter.invoke()
-    
-    
-    output_data = interpreter.get_tensor(output_details[0]['index'])
-    pred_label = np.argmax(output_data)
-    
-    return CLASSES[pred_label], output_data[0][pred_label]
-
-# Function to encode the image
-#def encode_image(image_path):
-#    with open(image_path, "rb") as image_file:
-#        return base64.b64encode(image_file.read()).decode('utf-8')
-
 def encode_image(image):
     if isinstance(image, Image.Image):
         buffered = BytesIO()
@@ -137,7 +87,7 @@ def main():
         if image:
             image = image.resize((image.width // 2, image.height // 2))
             image_bg = image
-            image = remove(image)
+            #image = remove(image)
             img_rgb = image.convert('RGB')
 
             if image.mode == 'RGBA':
