@@ -121,7 +121,7 @@ def classify_image(img, interpreter):
 def encode_image(image):
     if isinstance(image, Image.Image):
         buffered = BytesIO()
-        #image.save(buffered, format="JPEG")  # or "PNG", depending on your image format
+        image.save(buffered, format="JPEG")  # or "PNG", depending on your image format
         img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
         return img_str
     else:
