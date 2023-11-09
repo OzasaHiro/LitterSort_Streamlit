@@ -6,3 +6,4 @@ pyheif
 pydrive
 pydrive2
 rembg
+openai
