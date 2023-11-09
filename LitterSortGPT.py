@@ -152,31 +152,43 @@ def main():
             base64_image = encode_image(image)
 
             #st.write("We got base64 format!")
-            
-            interpreter = load_model()
-
-            label, confidence = classify_image(image, interpreter)
-            
-            response = client.chat.completions.create(
-                model="gpt-4-vision-preview",
-                messages=[
-                    {
-                        "role": "user",
-                        "content": [
-                            {"type": "text",
-                             "type": "Please advise on how to dispose of glass as waste in San Jose."},
-                            #{
-                            #    "type": "image_url",
-                            #    "image_url": {
-                            #        "url": f"https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg" },
-                            #},
+    
+            # ユーザーから画像のURLを入力してもらう
+            image_url = st.text_input('Enter the image URL:')
+        
+            # ボタンが押されたら応答を生成
+            if st.button('Describe Image'):
+                if image_url:
+                    # 画像を表示
+                    try:
+                        response = requests.get(image_url)
+                        image = Image.open(BytesIO(response.content))
+                        st.image(image, caption='Input Image', use_column_width=True)
+                    except Exception as e:
+                        st.error(f"Error loading image: {e}")
+        
+                    # OpenAIのAPIを呼び出して、画像の説明を生成
+                    response = client.chat.completions.create(
+                        model="gpt-4-vision-preview",
+                        messages=[
+                            {
+                                "role": "user",
+                                "content": [
+                                    {"type": "text", "text": "What’s in this image?"},
+                                    {
+                                        "type": "image_url",
+                                        "image_url": image_url,
+                                    },
+                                ],
+                            }
                         ],
-                    }
-                ],
-                max_tokens=100,
-            )
-
-            st.write(response.choices[0].message.content)           
+                        max_tokens=300,
+                    )
+        
+                    # 結果を表示
+                    st.write(response.choices[0].message.content)
+                else:
+                    st.warning('Please enter an image URL.')       
         
             interpreter = load_model()
 
