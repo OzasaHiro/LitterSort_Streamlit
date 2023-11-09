@@ -151,8 +151,12 @@ def main():
             # Getting the base64 string
             base64_image = encode_image(image)
 
-            st.write("We got base64 format!")
+            #st.write("We got base64 format!")
+            
+            interpreter = load_model()
 
+            label, confidence = classify_image(image, interpreter)
+            
             response = client.chat.completions.create(
                 model="gpt-4-vision-preview",
                 messages=[
@@ -160,12 +164,12 @@ def main():
                         "role": "user",
                         "content": [
                             {"type": "text",
-                             "type": "Please classify the objects in the image into categories: compost, cardboard, glass, trash, plastic, metal, paper, or other. Based on the classification, advise on how to dispose of theis item as waste in San Jose."},
-                            {
-                                "type": "image_url",
-                                "image_url": {
-                                    "url": f"https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg" },
-                            },
+                             "type": "Please advise on how to dispose of glass as waste in San Jose."},
+                            #{
+                            #    "type": "image_url",
+                            #    "image_url": {
+                            #        "url": f"https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg" },
+                            #},
                         ],
                     }
                 ],
