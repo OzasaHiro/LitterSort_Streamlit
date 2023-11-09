@@ -151,6 +151,8 @@ def main():
             # Getting the base64 string
             base64_image = encode_image(image)
 
+            st.write("We got base64 format!")
+
             response = client.chat.completions.create(
                 model="gpt-4-vision-preview",
                 messages=[
