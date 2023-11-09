@@ -129,7 +129,7 @@ def encode_image(image):
 
 
 def main():
-    st.title("LitterSortApp")
+    st.title("LitterSortGPT")
     uploaded_file = st.file_uploader("Upload Photo", type=['jpg', 'png', 'jpeg', 'heic'])
 
     if uploaded_file is not None:
@@ -173,36 +173,7 @@ def main():
             # 結果を表示
             st.write(response.choices[0].message.content)    
         
-            interpreter = load_model()
-            label, confidence = classify_image(image, interpreter)
-
-            
-            if 'class_selection' not in st.session_state:
-                st.session_state.class_selection = None
-            
-            if st.session_state.class_selection in CLASS_COMMENTS.keys():
-                index = list(CLASS_COMMENTS.keys()).index(st.session_state.class_selection)
-            else:
-                index = 0
-
-            st.session_state.class_selection = st.selectbox(
-                "What is this photo of? Please let me know the answer!!",
-                list(CLASS_COMMENTS.keys()) + list(ADDITIONAL_CLASS_COMMENTS.keys()),
-                index=index
-            )
-            
-            if st.session_state.class_selection in CLASS_COMMENTS.keys() or st.session_state.class_selection in ADDITIONAL_CLASS_COMMENTS.keys():
-                predicted_label = st.session_state.class_selection
-            else:
-                predicted_label = None
-
-            if st.button("Upload image"):
-                if predicted_label is None:
-                    st.error("Please select a class before uploading.")
-                else:
-                    upload_to_google_drive(image_bg, label, predicted_label)
-                    st.success("Uploaded successfully!")
-        
+   
 
 
 
