@@ -12,6 +12,7 @@ from openai import OpenAI
 import os
 import base64
 import streamlit as st
+from io import BytesIO
 
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 client = OpenAI()
