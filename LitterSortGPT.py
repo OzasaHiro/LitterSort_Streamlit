@@ -175,7 +175,7 @@ def main():
                             {
                                 "role": "user",
                                 "content": [
-                                    {"type": "text", "text": "What’s in this image?"},
+                                    {"type": "text", "text": "lease classify the objects in the image into categories: compost, cardboard, glass, trash, plastic, metal, paper, or other. Based on the classification, advise on how to dispose of theis item as waste in San Jose."},
                                     {
                                         "type": "image_url",
                                         "image_url": image_url,
@@ -183,7 +183,7 @@ def main():
                                 ],
                             }
                         ],
-                        max_tokens=300,
+                        max_tokens=100,
                     )
         
                     # 結果を表示
