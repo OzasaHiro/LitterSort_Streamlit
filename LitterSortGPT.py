@@ -112,9 +112,19 @@ def classify_image(img, interpreter):
     return CLASSES[pred_label], output_data[0][pred_label]
 
 # Function to encode the image
-def encode_image(image_path):
-    with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode('utf-8')
+#def encode_image(image_path):
+#    with open(image_path, "rb") as image_file:
+#        return base64.b64encode(image_file.read()).decode('utf-8')
+
+def encode_image(image):
+    if isinstance(image, Image.Image):
+        buffered = BytesIO()
+        #image.save(buffered, format="JPEG")  # or "PNG", depending on your image format
+        img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
+        return img_str
+    else:
+        raise TypeError("The function requires a PIL.Image.Image object")
+
 
 def main():
     st.title("LitterSortApp")
