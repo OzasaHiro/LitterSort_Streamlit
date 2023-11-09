@@ -174,10 +174,8 @@ def main():
             st.write(response.choices[0].message.content)    
         
             interpreter = load_model()
-
             label, confidence = classify_image(image, interpreter)
-            st.write(f"Result: {label}  (Confidence: {100*confidence:.0f}%)")
-            st.write(generate_comment(label))
+
             
             if 'class_selection' not in st.session_state:
                 st.session_state.class_selection = None
