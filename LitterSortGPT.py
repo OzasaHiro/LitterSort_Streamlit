@@ -151,45 +151,27 @@ def main():
 
             # Getting the base64 string
             base64_image = encode_image(image)
-
-            #st.write("We got base64 format!")
-    
-            # ユーザーから画像のURLを入力してもらう
-            image_url = st.text_input('Enter the image URL:')
         
-            # ボタンが押されたら応答を生成
-            if st.button('Describe Image'):
-                if image_url:
-                    # 画像を表示
-                    try:
-                        response = requests.get(image_url)
-                        image = Image.open(BytesIO(response.content))
-                        st.image(image, caption='Input Image', use_column_width=True)
-                    except Exception as e:
-                        st.error(f"Error loading image: {e}")
-        
-                    # OpenAIのAPIを呼び出して、画像の説明を生成
-                    response = client.chat.completions.create(
-                        model="gpt-4-vision-preview",
-                        messages=[
+            # OpenAIのAPIを呼び出して、画像の説明を生成
+            response = client.chat.completions.create(
+                model="gpt-4-vision-preview",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": "lease classify the objects in the image into categories: compost, cardboard, glass, trash, plastic, metal, paper, or other. Based on the classification, advise on how to dispose of theis item as waste in San Jose."},
                             {
-                                "role": "user",
-                                "content": [
-                                    {"type": "text", "text": "lease classify the objects in the image into categories: compost, cardboard, glass, trash, plastic, metal, paper, or other. Based on the classification, advise on how to dispose of theis item as waste in San Jose."},
-                                    {
-                                        "type": "image_url",
-                                        "image_url": f"data:image/jpeg;base64,{base64_image}",
-                                    },
-                                ],
-                            }
+                                "type": "image_url",
+                                "image_url": f"data:image/jpeg;base64,{base64_image}",
+                            },
                         ],
-                        max_tokens=100,
-                    )
-        
-                    # 結果を表示
-                    st.write(response.choices[0].message.content)
-                else:
-                    st.warning('Please enter an image URL.')       
+                    }
+                ],
+                max_tokens=100,
+            )
+
+            # 結果を表示
+            st.write(response.choices[0].message.content)    
         
             interpreter = load_model()
 
