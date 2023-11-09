@@ -178,7 +178,7 @@ def main():
                                     {"type": "text", "text": "lease classify the objects in the image into categories: compost, cardboard, glass, trash, plastic, metal, paper, or other. Based on the classification, advise on how to dispose of theis item as waste in San Jose."},
                                     {
                                         "type": "image_url",
-                                        "image_url": image_url,
+                                        "image_url": f"data:image/jpeg;base64,{base64_image}",
                                     },
                                 ],
                             }
