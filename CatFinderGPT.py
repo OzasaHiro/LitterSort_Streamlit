@@ -53,7 +53,7 @@ def encode_image(image):
 
 def main():
     st.title("猫を褒めるためのAI")
-    uploaded_file = st.file_uploader("Upload Photo", type=['jpg', 'png', 'jpeg', 'heic'])
+    uploaded_file = st.file_uploader("猫の写真を褒めます。写っていなくても褒めます。", type=['jpg', 'png', 'jpeg', 'heic'])
 
     if uploaded_file is not None:
         image = open_image(uploaded_file)
