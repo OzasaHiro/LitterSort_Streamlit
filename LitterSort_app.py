@@ -145,6 +145,8 @@ def main():
                 list(CLASS_COMMENTS.keys()) + list(ADDITIONAL_CLASS_COMMENTS.keys()),
                 index=index
             )
+
+            st.experimental_set_query_params(class_selection=st.session_state.class_selection)
             
             if st.session_state.class_selection in CLASS_COMMENTS.keys() or st.session_state.class_selection in ADDITIONAL_CLASS_COMMENTS.keys():
                 predicted_label = st.session_state.class_selection
@@ -164,8 +166,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-    # Get the current value of class_selection from st.session_state
-    class_selection_value = st.session_state.class_selection
-
-    # Set the query parameter using st.experimental_set_query_params
-    st.experimental_set_query_params(class_selection=class_selection_value)
