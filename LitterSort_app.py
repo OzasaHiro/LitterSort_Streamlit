@@ -163,3 +163,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    # Get the current value of class_selection from st.session_state
+    class_selection_value = st.session_state.class_selection
+
+    # Set the query parameter using st.experimental_set_query_params
+    st.experimental_set_query_params(class_selection=class_selection_value)
